@@ -45,13 +45,14 @@ public class Calculator {
             if (calculateInfo.length() > 0)
                 calculateInfo.append("\n");
             calculateInfo.append(String.format("items checked: %s, result: %s", itemCount, score));
-            player.sendMessage(calculateInfo.toString());
         }
 
         return new CalculateResult(score, calculateInfo.toString());
     }
 
     private float checkItem(final @Nullable ItemStack item, final String description){
+        Utils.logger.info(description + ", " + item);
+
         if (item == null || item.getType() == Material.AIR) return 0f;
         this.itemCount++;
         final ItemInfo itemInfo = itemsMap.get(item.getType());
@@ -87,7 +88,7 @@ public class Calculator {
                 if (calculateInfo.length() > 0)
                     calculateInfo.append("\n");
 
-                calculateInfo.append(String.format("%s, value: %s, lvl: %s, lvl-scl: %s",
+                calculateInfo.append(String.format("   %s, value: %s, lvl: %s, lvl-scl: %s",
                         enchantment.key(), value, level, levelScale));
             }
             enchantmentScore += value + ((float) level * levelScale);

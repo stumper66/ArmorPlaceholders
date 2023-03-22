@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean hasPermissions(final @Nullable String perm){
-        if (sender.hasPermission("lm_items" + (perm == null ? "" : "." + perm)))
+        if (sender.hasPermission("armorplaceholders" + (perm == null ? "" : "." + perm)))
             return true;
         else {
             sender.sendMessage("You don't have permissions for this command");
@@ -85,9 +85,12 @@ public class Commands implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String @NotNull [] args){
+        this.sender = sender;
+        if (!hasPermissions(null)) return null;
+
         if (args.length <= 1)
             return List.of("info", "calculate", "reload");
-        else if (args.length == 2 && "calculate".equalsIgnoreCase(args[0])){
+        else if (args.length == 2 && "calculate".equalsIgnoreCase(args[0]) && hasPermissions("calculate")){
             return Bukkit.getOnlinePlayers().stream()
                     .sorted(Comparator.comparing((Player n) -> n.getName()))
                     .map(Player::getName)
