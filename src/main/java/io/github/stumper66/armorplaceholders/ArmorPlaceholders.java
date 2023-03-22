@@ -10,7 +10,6 @@ public class ArmorPlaceholders extends JavaPlugin {
 
     private static ArmorPlaceholders instance;
     Calculator calculator;
-    private final Object mapLock = new Object();
 
     @Override
     public void onEnable() {

@@ -32,13 +32,15 @@ public class ConfigLoader {
 
     private static void parseConfig(final @NotNull YamlConfiguration cfg){
         final MiscOptions opts = new MiscOptions();
-        opts.itemDefaultValue = (float) cfg.getDouble("item-default-value");
+        opts.itemDefaultValue = (float) cfg.getDouble("item-default-value", 1.0);
         opts.finalScale = (float) cfg.getDouble("final-scale", 1.0);
-        opts.enchantmentDefaultValue = (float) cfg.getDouble("enchantment-default-value");
+        opts.enchantmentDefaultValue = (float) cfg.getDouble("enchantment-default-value", 1.0);
         opts.enchantmentLevelScale = (float) cfg.getDouble("enchantment-level-scale", 1.0);
+        double temp = cfg.getDouble("final-score-cap", Double.MIN_VALUE);
+        opts.finalScoreCap = temp > Double.MIN_VALUE ? (float) temp : null;
 
         final Map<Enchantment, EnchantmentInfo> enchantmentsMap = parseEnchantments(cfg);
-        final Map<Material, ItemInfo> itemsMap = parseMaterials(objToCS(cfg.get("materials")));
+        final Map<Material, ItemInfo> itemsMap = parseMaterials(cfg);
 
         final ArmorPlaceholders main = ArmorPlaceholders.getInstance();
         main.calculator.miscOptions = opts;

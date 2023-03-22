@@ -58,6 +58,8 @@ public class Calculator {
 
         float itemScore = miscOptions.itemDefaultValue;
         if (itemInfo == null) {
+            if (calculateInfo.length() > 0)
+                calculateInfo.append("\n");
             calculateInfo.append(String.format("%s: item: %s, score: %s, no defined value",
                     description, item.getType(), itemScore));
             return itemScore;
@@ -98,6 +100,22 @@ public class Calculator {
                 calculateInfo.append("\n");
             calculateInfo.append(String.format("%s: %s, score: %s",
                     description, item.getType(), itemScore));
+        }
+
+        if (miscOptions.finalScale != 1.0f){
+            itemScore *= miscOptions.finalScale;;
+            if (showInfo){
+                calculateInfo.append(", scl: ");
+                calculateInfo.append(miscOptions.finalScale);
+            }
+        }
+
+        if (miscOptions.finalScoreCap != null && itemScore > miscOptions.finalScoreCap){
+            itemScore = miscOptions.finalScoreCap;
+            if (showInfo) {
+                calculateInfo.append(", hit-cap: ");
+                calculateInfo.append(miscOptions.finalScoreCap);
+            }
         }
 
         return itemScore;
