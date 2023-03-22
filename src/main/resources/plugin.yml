@@ -1,0 +1,20 @@
+name: ArmorPlaceholders
+version: '${project.version}'
+main: io.github.stumper66.armorplaceholders.ArmorPlaceholders
+depend:
+  - PlaceholderAPI
+api-version: '1.16'
+load: POSTWORLD
+author: stumper66
+description: "${project.description}"
+website: 'https://github.com/stumper66'
+
+commands:
+  armorplaceholders:
+    description: Manages Armor Placeholders
+    aliases: [ aph ]
+
+permissions:
+  armorplaceholders.*:
+    description: Access to all aph commands
+    default: op
