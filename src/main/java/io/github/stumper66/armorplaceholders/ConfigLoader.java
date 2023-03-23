@@ -36,6 +36,9 @@ public class ConfigLoader {
         opts.finalScale = (float) cfg.getDouble("final-scale", 1.0);
         opts.enchantmentDefaultValue = (float) cfg.getDouble("enchantment-default-value", 1.0);
         opts.enchantmentLevelScale = (float) cfg.getDouble("enchantment-level-scale", 1.0);
+        opts.checkMainHand = cfg.getBoolean("check-main-hand", true);
+        opts.checkOffHand = cfg.getBoolean("check-offhand-hand", true);
+        opts.checkArmor = cfg.getBoolean("check-armor", true);
         double temp = cfg.getDouble("final-score-cap", Double.MIN_VALUE);
         opts.finalScoreCap = temp > Double.MIN_VALUE ? (float) temp : null;
 

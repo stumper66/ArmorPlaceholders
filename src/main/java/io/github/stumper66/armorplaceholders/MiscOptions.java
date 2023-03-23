@@ -6,4 +6,7 @@ public class MiscOptions {
     public Float finalScoreCap;
     public float enchantmentDefaultValue;
     public float enchantmentLevelScale;
+    public boolean checkMainHand;
+    public boolean checkOffHand;
+    public boolean checkArmor;
 }

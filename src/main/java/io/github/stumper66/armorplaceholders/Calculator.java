@@ -31,28 +31,64 @@ public class Calculator {
         float score = 0f;
         this.itemCount = 0;
         this.calculateInfo.setLength(0);
+        final String separators = "&l------------------------------&r";
+        if (showInfo) this.calculateInfo.append(separators);
 
         final EntityEquipment ee = player.getEquipment();
-        score += checkItem(ee.getHelmet(), "helmet");
-        score += checkItem(ee.getChestplate(), "chestplate");
-        score += checkItem(ee.getLeggings(), "leggings");
-        score += checkItem(ee.getBoots(), "boots");
+        if (miscOptions.checkArmor) {
+            score += checkItem(ee.getHelmet(), "Helmet");
+            score += checkItem(ee.getChestplate(), "Chestplate");
+            score += checkItem(ee.getLeggings(), "Leggings");
+            score += checkItem(ee.getBoots(), "Boots");
+        }
 
-        score += checkItem(ee.getItemInMainHand(), "main item");
-        score += checkItem(ee.getItemInOffHand(), "offhand item");
+        if (miscOptions.checkMainHand) {
+            score += checkItem(ee.getItemInMainHand(), "Main-Hand");
+        }
+        if (miscOptions.checkOffHand) {
+            score += checkItem(ee.getItemInOffHand(), "Off-Hand");
+        }
+
+        StringBuilder sbMisc = new StringBuilder();
+        if (miscOptions.finalScoreCap != null && score > miscOptions.finalScoreCap){
+            score = miscOptions.finalScoreCap;
+            if (showInfo) {
+                sbMisc.append(String.format(", hit-cap: &9%s&r",
+                        miscOptions.finalScoreCap));
+            }
+        }
+
+        if (miscOptions.finalScale != 1.0f){
+            score *= miscOptions.finalScale;
+            if (showInfo){
+                sbMisc.append(String.format(", scl: &9%s&r",
+                        miscOptions.finalScale));
+            }
+        }
 
         if (showInfo){
-            if (calculateInfo.length() > 0)
-                calculateInfo.append("\n");
-            calculateInfo.append(String.format("items checked: %s, result: %s", itemCount, score));
+            if (itemCount > 0) {
+                if (calculateInfo.length() > 0)
+                    calculateInfo.append("\n");
+                calculateInfo.append(separators);
+                calculateInfo.append(String.format("\nTotal result: &9%s&r", score));
+                if (sbMisc.length() > 0)
+                    calculateInfo.append(sbMisc);
+
+                final String finalMsg = Utils.colorizeStandardCodes(calculateInfo.toString());
+                calculateInfo.setLength(0);
+                calculateInfo.append(finalMsg);
+            }
+            else{
+                calculateInfo.setLength(0);
+                calculateInfo.append("No items checked");
+            }
         }
 
         return new CalculateResult(score, calculateInfo.toString());
     }
 
     private float checkItem(final @Nullable ItemStack item, final String description){
-        Utils.logger.info(description + ", " + item);
-
         if (item == null || item.getType() == Material.AIR) return 0f;
         this.itemCount++;
         final ItemInfo itemInfo = itemsMap.get(item.getType());
@@ -61,8 +97,8 @@ public class Calculator {
         if (itemInfo == null) {
             if (calculateInfo.length() > 0)
                 calculateInfo.append("\n");
-            calculateInfo.append(String.format("%s: item: %s, score: %s, no defined value",
-                    description, item.getType(), itemScore));
+            calculateInfo.append(String.format("[%s] %s: item: %s, score: %s, no defined value",
+                    itemCount, description, item.getType(), itemScore));
             return itemScore;
         }
         itemScore += itemInfo.value;
@@ -71,6 +107,7 @@ public class Calculator {
         if (meta == null) return itemScore;
 
         if (this.enchantmentsMap == null) this.enchantmentsMap = new HashMap<>();
+        StringBuilder sbEnchantments = new StringBuilder();
         float enchantmentScore = 0.0f;
         for (final Enchantment enchantment : meta.getEnchants().keySet()){
             final int level = meta.getEnchants().get(enchantment);
@@ -84,14 +121,12 @@ public class Calculator {
             else
                 value = miscOptions.enchantmentDefaultValue;
 
+            float totalValue = value + ((float) level * levelScale);
             if (showInfo) {
-                if (calculateInfo.length() > 0)
-                    calculateInfo.append("\n");
-
-                calculateInfo.append(String.format("   %s, value: %s, lvl: %s, lvl-scl: %s",
-                        enchantment.key(), value, level, levelScale));
+                sbEnchantments.append(String.format("\n  - &7&o%s_%s&r (&9%s&r)",
+                        enchantment.key().value(), level, totalValue));
             }
-            enchantmentScore += value + ((float) level * levelScale);
+            enchantmentScore += totalValue;
         }
 
         itemScore += enchantmentScore;
@@ -99,24 +134,10 @@ public class Calculator {
         if (showInfo) {
             if (calculateInfo.length() > 0)
                 calculateInfo.append("\n");
-            calculateInfo.append(String.format("%s: %s, score: %s",
-                    description, item.getType(), itemScore));
-        }
-
-        if (miscOptions.finalScale != 1.0f){
-            itemScore *= miscOptions.finalScale;;
-            if (showInfo){
-                calculateInfo.append(", scl: ");
-                calculateInfo.append(miscOptions.finalScale);
-            }
-        }
-
-        if (miscOptions.finalScoreCap != null && itemScore > miscOptions.finalScoreCap){
-            itemScore = miscOptions.finalScoreCap;
-            if (showInfo) {
-                calculateInfo.append(", hit-cap: ");
-                calculateInfo.append(miscOptions.finalScoreCap);
-            }
+            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r)",
+                    itemCount, description, item.getType(), itemScore));
+            if (sbEnchantments.length() > 0)
+                calculateInfo.append(sbEnchantments);
         }
 
         return itemScore;

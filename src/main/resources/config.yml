@@ -1,6 +1,9 @@
 item-default-value: 1.0
 final-scale: 1.0
 final-score-cap: 100
+check-main-hand: true
+check-offhand-hand: true
+check-armor: true
 
 # --------------- enchantments ---------------
 enchantment-default-value: 0.5
@@ -96,3 +99,7 @@ materials:
 
   BOW: 2
   CROSSBOW: 3
+
+# --------------- misc ----------------
+
+  SHIELD: 4

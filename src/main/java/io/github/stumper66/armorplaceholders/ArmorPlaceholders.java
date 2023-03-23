@@ -16,6 +16,7 @@ public class ArmorPlaceholders extends JavaPlugin {
         calculator = new Calculator();
         registerCommands();
         ConfigLoader.loadConfig();
+        showConfigInfo();
         (new PAPIIntegration()).register();
         Utils.logger.info("ArmorPlaceholders finished startup");
     }
@@ -26,6 +27,13 @@ public class ArmorPlaceholders extends JavaPlugin {
             Utils.logger.warning("ArmorPlaceHolders: Command &b/armorplaceholders&7 is unavailable, is it not registered in plugin.yml?");
         else
             cmd.setExecutor(new Commands(this));
+    }
+
+    void showConfigInfo(){
+        Utils.logger.info(String.format(
+                "ArmorPlaceHolders: materials defined: %s, enchantments defined: %s",
+                calculator.itemsMap.size(), calculator.enchantmentsMap.size()
+        ));
     }
 
     @Override

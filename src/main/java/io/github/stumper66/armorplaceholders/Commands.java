@@ -37,6 +37,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         else if ("reload".equalsIgnoreCase(args[0])){
             if (!hasPermissions("reload")) return true;
             ConfigLoader.loadConfig();
+            main.showConfigInfo();
             sender.sendMessage("Reload complete");
         }
 
@@ -80,7 +81,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         if (!hasPermissions("info")) return;
 
         sender.sendMessage("ArmorPlaceHolders, version " + main.getDescription().getVersion() + System.lineSeparator() +
-                "Created by stumper66");
+                "Created by stumper66\nContributors: UltimaOath");
     }
 
     @Override
