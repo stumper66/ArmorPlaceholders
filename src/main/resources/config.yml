@@ -1,6 +1,7 @@
 item-default-value: 1.0
 final-scale: 1.0
 final-score-cap: 100
+
 check-main-hand: true
 check-offhand-hand: true
 check-armor: true
@@ -10,45 +11,45 @@ enchantment-default-value: 0.5
 enchantment-level-scale: 1
 
 enchantments:
-  ARROW_DAMAGE:
-  ARROW_FIRE:
-  ARROW_INFINITE:
-  ARROW_KNOCKBACK:
+  AQUA_AFFINITY:
+  BANE_OF_ARTHROPODS:
   BINDING_CURSE:
+  BLAST_PROTECTION:
   CHANNELING:
-  DAMAGE_ALL:
-  DAMAGE_ARTHROPODS:
-  DAMAGE_UNDEAD:
   DEPTH_STRIDER:
-  DIG_SPEED:
-  DURABILITY:
+  EFFICIENCY:
+  FEATHER_FALLING:
   FIRE_ASPECT:
+  FIRE_PROTECTION:
+  FLAME:
+  FORTUNE:
   FROST_WALKER:
   IMPALING:
+  INFINITY:
   KNOCKBACK:
-  LOOT_BONUS_BLOCKS:
-  LOOT_BONUS_MOBS:
+  LOOTING:
   LOYALTY:
-  LUCK:
+  LUCK_OF_THE_SEA:
   LURE:
   MENDING:
   MULTISHOT:
-  OXYGEN:
   PIERCING:
-  PROTECTION_ENVIRONMENTAL:
-  PROTECTION_EXPLOSIONS:
-  PROTECTION_FALL:
-  PROTECTION_FIRE:
-  PROTECTION_PROJECTILE:
+  POWER:
+  PROJECTILE_PROTECTION:
+  PROTECTION:
+  PUNCH:
   QUICK_CHARGE:
+  RESPIRATION:
   RIPTIDE:
+  SHARPNESS:
   SILK_TOUCH:
+  SMITE:
   SOUL_SPEED:
-  SWEEPING_EDGE:
+  SWEEPING:
   SWIFT_SNEAK:
   THORNS:
-  VANISHING_CURSE:
-  WATER_WORKER:
+  UNBREAKING:
+  VANISHING_CURSE: 0
 
 # --------------- armors ----------------
 
@@ -99,6 +100,7 @@ materials:
 
   BOW: 2
   CROSSBOW: 3
+  TRIDENT: 5
 
 # --------------- misc ----------------
 

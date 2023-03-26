@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
@@ -57,22 +58,61 @@ public class ConfigLoader {
         if (cs == null) return enchantmentsMap;
 
         for (final String enchantmentName : cs.getKeys(false)){
-            double value = cs.getDouble(enchantmentName, Double.MIN_VALUE);
-            if (value == Double.MIN_VALUE) continue;
+            Object test = cs.get(enchantmentName);
+            final EnchantmentInfo ei = new EnchantmentInfo();
+            double levelScale = cs.getDouble("enchantment-level-scale", Double.MIN_VALUE);
+            double value = Double.MIN_VALUE;
+            //Utils.logger.info(String.format("%s: %s", enchantmentName, test));
+            if (test instanceof MemorySection){
+                MemorySection ms = (MemorySection) test;
+                levelScale = ms.getDouble("scale", levelScale);
+                Object valueSectionObj = ((MemorySection) test).get("value");
 
-            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentName.toLowerCase()));
-            if (enchantment == null){
+                if (valueSectionObj instanceof MemorySection){
+                    final MemorySection valueSection = (MemorySection) valueSectionObj;
+                    for (final String key : valueSection.getKeys(false)){
+                        int keyInt;
+                        float assignment;
+                        try{
+                            keyInt = Integer.parseInt(key);
+                        }
+                        catch (Exception ignored){
+                            Utils.logger.info(String.format("Invalid level %s for %s", key, enchantmentName));
+                            continue;
+                        }
+                        try{
+                            double tempD = valueSection.getDouble(key, Double.MIN_VALUE);
+                            if (tempD == Double.MIN_VALUE){
+                                Utils.logger.info(String.format("No level assignment for %s:%s", enchantmentName, key));
+                                continue;
+                            }
+                            ei.levelAssignments.put(keyInt, tempD);
+                        }
+                        catch (Exception ignored){
+                            Utils.logger.info(String.format("Invalid level assignment for %s:%s", enchantmentName, key));
+                        }
+                    }
+                }
+            }
+            else {
+                value = cs.getDouble(enchantmentName, Double.MIN_VALUE);
+                if (value == Double.MIN_VALUE) continue;
+            }
+
+            ei.enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentName.toLowerCase()));
+            if (ei.enchantment == null){
                 Utils.logger.warning("Invalid enchantment: " + enchantmentName);
                 continue;
             }
 
-            EnchantmentInfo ei = new EnchantmentInfo();
-            ei.enchantment = enchantment;
             ei.value = (float) value;
-            final double levelScale = cs.getDouble("enchantment-level-scale", Double.MIN_VALUE);
+            if (!ei.levelAssignments.isEmpty()){
+                Utils.logger.info(enchantmentName + ", level assignments: " + ei.levelAssignments);
+            }
+
             if (levelScale > Double.MIN_VALUE)
                 ei.levelScale = (float) levelScale;
-            enchantmentsMap.put(enchantment, ei);
+            enchantmentsMap.put(ei.enchantment, ei);
         }
 
         return enchantmentsMap;

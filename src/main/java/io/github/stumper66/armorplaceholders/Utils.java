@@ -15,4 +15,27 @@ public class Utils {
                 ChatColor.translateAlternateColorCodes('&', msg) :
                 net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', msg);
     }
+
+    public static @NotNull String capitalize(@NotNull final String str) {
+        final StringBuilder builder = new StringBuilder();
+        final String[] words = str.toLowerCase().split(" "); // each word separated from str
+        for (int i = 0; i < words.length; i++) {
+            final String word = words[i];
+            if (word.isEmpty()) {
+                continue;
+            }
+
+            builder.append(String.valueOf(word.charAt(0)).toUpperCase()); // capitalize first letter
+            if (word.length() > 1) {
+                builder.append(word.substring(1)); // append the rest of the word
+            }
+
+            // if there is another word to capitalize, then add a space
+            if (i < words.length - 1) {
+                builder.append(" ");
+            }
+        }
+
+        return builder.toString();
+    }
 }

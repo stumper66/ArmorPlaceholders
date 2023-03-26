@@ -102,6 +102,7 @@ public class Calculator {
             return itemScore;
         }
         itemScore += itemInfo.value;
+        final float noEnchantmentScore = itemScore;
 
         final ItemMeta meta = item.getItemMeta();
         if (meta == null) return itemScore;
@@ -109,22 +110,28 @@ public class Calculator {
         if (this.enchantmentsMap == null) this.enchantmentsMap = new HashMap<>();
         StringBuilder sbEnchantments = new StringBuilder();
         float enchantmentScore = 0.0f;
+        boolean hasEnchantments = false;
         for (final Enchantment enchantment : meta.getEnchants().keySet()){
-            final int level = meta.getEnchants().get(enchantment);
+            hasEnchantments = true;
+            final int enchantmentLevel = meta.getEnchants().get(enchantment);
             float levelScale = miscOptions.enchantmentLevelScale;
             float value;
             EnchantmentInfo ei = this.enchantmentsMap.get(enchantment);
             if (ei != null){
                 value = ei.value;
                 if (ei.levelScale != null) levelScale = ei.levelScale;
+                if (ei.levelAssignments.containsKey(enchantmentLevel))
+                    value = ei.levelAssignments.get(enchantmentLevel).floatValue();
+
             }
             else
                 value = miscOptions.enchantmentDefaultValue;
 
-            float totalValue = value + ((float) level * levelScale);
+            float totalValue = value * (float) enchantmentLevel * levelScale;
             if (showInfo) {
+                final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
                 sbEnchantments.append(String.format("\n  - &7&o%s_%s&r (&9%s&r)",
-                        enchantment.key().value(), level, totalValue));
+                        enchantName, enchantmentLevel, totalValue));
             }
             enchantmentScore += totalValue;
         }
@@ -134,8 +141,11 @@ public class Calculator {
         if (showInfo) {
             if (calculateInfo.length() > 0)
                 calculateInfo.append("\n");
-            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r)",
-                    itemCount, description, item.getType(), itemScore));
+            String extra = hasEnchantments ?
+                    " + &3" + itemScore + "&r" :
+                    "";
+            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r%s)",
+                    itemCount, description, item.getType(), noEnchantmentScore, extra));
             if (sbEnchantments.length() > 0)
                 calculateInfo.append(sbEnchantments);
         }
