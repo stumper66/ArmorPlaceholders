@@ -9,4 +9,5 @@ public class MiscOptions {
     public boolean checkMainHand;
     public boolean checkOffHand;
     public boolean checkArmor;
+    public boolean onlyIncludeDefinedItems;
 }

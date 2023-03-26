@@ -5,103 +5,220 @@ final-score-cap: 100
 check-main-hand: true
 check-offhand-hand: true
 check-armor: true
+only-include-defined-items: true
 
 # --------------- enchantments ---------------
+
 enchantment-default-value: 0.5
 enchantment-level-scale: 1
 
 enchantments:
   AQUA_AFFINITY:
+    1: 10.5
   BANE_OF_ARTHROPODS:
+    1: 15.0
+    2: 23.0
+    3: 31.0
+    4: 39.0
+    5: 47.0
   BINDING_CURSE:
+    1: 0.0
   BLAST_PROTECTION:
+    1: 9.0
+    2: 17.0
+    3: 25.0
+    4: 33.0
   CHANNELING:
+    1: 37.5
   DEPTH_STRIDER:
+    1: 17.5
+    2: 27.5
+    3: 37.5
   EFFICIENCY:
+    1: 26.0
+    2: 36.0
+    3: 46.0
+    4: 56.0
+    5: 66.0
   FEATHER_FALLING:
+    1: 8.0
+    2: 14.0
+    3: 20.0
+    4: 26.0
   FIRE_ASPECT:
+    1: 35.0
+    2: 55.0
   FIRE_PROTECTION:
+    1: 14.0
+    2: 22.0
+    3: 30.0
+    4: 38.0
   FLAME:
+    1: 35.0
   FORTUNE:
+    1: 40.0
+    2: 49.0
+    3: 58.0
   FROST_WALKER:
+    1: 17.5
+    2: 27.5
   IMPALING:
+    1: 11.0
+    2: 19.0
+    3: 27.0
+    4: 35.0
+    5: 43.0
   INFINITY:
+    1: 35.0
   KNOCKBACK:
+    1: 30.0
+    2: 50.0
   LOOTING:
+    1: 40.0
+    2: 49.0
+    3: 58.0
   LOYALTY:
+    1: 31.0
+    2: 34.5
+    3: 38.0
   LUCK_OF_THE_SEA:
+    1: 40.0
+    2: 49.0
+    3: 58.0
   LURE:
+    1: 40.0
+    2: 49.0
+    3: 58.0
   MENDING:
+    1: 50.0
   MULTISHOT:
+    1: 35.0
   PIERCING:
+    1: 25.5
+    2: 30.5
+    3: 35.5
+    4: 40.5
   POWER:
+    1: 8.5
+    2: 18.5
+    3: 28.5
+    4: 38.5
+    5: 48.5
   PROJECTILE_PROTECTION:
+    1: 6.0
+    2: 12.0
+    3: 18.0
+    4: 24.0
   PROTECTION:
+    1: 6.5
+    2: 17.5
+    3: 28.5
+    4: 39.5
   PUNCH:
+    1: 24.5
+    2: 44.5
   QUICK_CHARGE:
+    1: 31.0
+    2: 41.0
+    3: 51.0
   RESPIRATION:
+    1: 25.0
+    2: 35.0
+    3: 45.0
   RIPTIDE:
+    1: 33.5
+    2: 37.0
+    3: 40.5
   SHARPNESS:
+    1: 11.0
+    2: 22.0
+    3: 33.0
+    4: 44.0
+    5: 55.0
   SILK_TOUCH:
+    1: 40.0
   SMITE:
+    1: 15.0
+    2: 23.0
+    3: 31.0
+    4: 39.0
+    5: 47.0
   SOUL_SPEED:
+    1: 17.5
+    2: 27.5
+    3: 37.5
   SWEEPING:
+    1: 12.5
+    2: 21.5
+    3: 30.5
   SWIFT_SNEAK:
+    1: 17.5
+    2: 27.5
+    3: 37.5
+    4: 47.5
+    5: 57.5
   THORNS:
+    1: 35.0
+    2: 50.0
+    3: 65.0
   UNBREAKING:
-  VANISHING_CURSE: 0
+    1: 30.0
+    2: 38.0
+    3: 46.0
+  VANISHING_CURSE:
+    1: 0.0
 
 # --------------- armors ----------------
 
 materials:
-  LEATHER_HELMET: 1
-  LEATHER_CHESTPLATE: 1
-  LEATHER_LEGGINGS: 1
+  LEATHER_HELMET: 2
+  LEATHER_CHESTPLATE: 4
+  LEATHER_LEGGINGS: 3
   LEATHER_BOOTS: 1
 
   CHAINMAIL_HELMET: 2
-  CHAINMAIL_CHESTPLATE: 2
-  CHAINMAIL_LEGGINGS: 2
-  CHAINMAIL_BOOTS: 2
+  CHAINMAIL_CHESTPLATE: 4
+  CHAINMAIL_LEGGINGS: 3
+  CHAINMAIL_BOOTS: 1
 
-  IRON_HELMET: 3
-  IRON_CHESTPLATE: 3
-  IRON_LEGGINGS: 3
+  IRON_HELMET: 4
+  IRON_CHESTPLATE: 7
+  IRON_LEGGINGS: 6
   IRON_BOOTS: 3
 
-  GOLD_HELMET: 4
+  GOLD_HELMET: 2
   GOLD_CHESTPLATE: 4
-  GOLD_LEGGINGS: 4
-  GOLD_BOOTS: 4
+  GOLD_LEGGINGS: 3
+  GOLD_BOOTS: 1
 
-  DIAMOND_HELMET: 5
-  DIAMOND_CHESTPLATE: 5
-  DIAMOND_LEGGINGS: 5
+  DIAMOND_HELMET: 6
+  DIAMOND_CHESTPLATE: 10
+  DIAMOND_LEGGINGS: 9
   DIAMOND_BOOTS: 5
 
-  NETHERITE_HELMET: 6
-  NETHERITE_CHESTPLATE: 6
-  NETHERITE_LEGGINGS: 6
-  NETHERITE_BOOTS: 6
+  NETHERITE_HELMET: 8
+  NETHERITE_CHESTPLATE: 13
+  NETHERITE_LEGGINGS: 12
+  NETHERITE_BOOTS: 7
 
-# --------------- weapons ----------------
+  # --------------- weapons ----------------
 
-  STONE_SWORD: 1
-  IRON_SWORD: 2
+  STONE_SWORD: 3
+  IRON_SWORD: 7
   GOLD_SWORD: 3
-  DIAMOND_SWORD: 4
-  NETHERITE_SWORD: 5
+  DIAMOND_SWORD: 12
+  NETHERITE_SWORD: 17
 
-  STONE_AXE: 1
-  IRON_AXE: 2
-  GOLD_AXE: 3
-  DIAMOND_AXE: 4
-  NETHERITE_AXE: 5
+  STONE_AXE: 2
+  IRON_AXE: 6
+  GOLD_AXE: 2
+  DIAMOND_AXE: 11
+  NETHERITE_AXE: 16
 
-  BOW: 2
-  CROSSBOW: 3
+  BOW: 5
+  CROSSBOW: 5
   TRIDENT: 5
 
-# --------------- misc ----------------
+  # --------------- misc ----------------
 
-  SHIELD: 4
+  SHIELD: 5

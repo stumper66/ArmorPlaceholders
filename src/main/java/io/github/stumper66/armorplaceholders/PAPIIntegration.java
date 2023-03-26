@@ -41,7 +41,7 @@ public class PAPIIntegration extends PlaceholderExpansion {
             return "";
         }
 
-        if ("calculate".equalsIgnoreCase(identifier)) {
+        if ("calculate".equalsIgnoreCase(identifier) || "calc".equalsIgnoreCase(identifier)) {
             return main.calculator.calculatePlayerNumber(player, false).result + "";
         }
 

@@ -90,17 +90,23 @@ public class Calculator {
 
     private float checkItem(final @Nullable ItemStack item, final String description){
         if (item == null || item.getType() == Material.AIR) return 0f;
-        this.itemCount++;
         final ItemInfo itemInfo = itemsMap.get(item.getType());
 
         float itemScore = miscOptions.itemDefaultValue;
         if (itemInfo == null) {
+            if (miscOptions.onlyIncludeDefinedItems){
+                return 0.0f;
+            }
+            this.itemCount++;
             if (calculateInfo.length() > 0)
                 calculateInfo.append("\n");
-            calculateInfo.append(String.format("[%s] %s: item: %s, score: %s, no defined value",
+            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r)",
                     itemCount, description, item.getType(), itemScore));
+
             return itemScore;
         }
+
+        this.itemCount++;
         itemScore += itemInfo.value;
         final float noEnchantmentScore = itemScore;
 

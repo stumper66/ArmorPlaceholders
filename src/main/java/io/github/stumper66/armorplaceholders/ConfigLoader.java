@@ -40,6 +40,7 @@ public class ConfigLoader {
         opts.checkMainHand = cfg.getBoolean("check-main-hand", true);
         opts.checkOffHand = cfg.getBoolean("check-offhand-hand", true);
         opts.checkArmor = cfg.getBoolean("check-armor", true);
+        opts.onlyIncludeDefinedItems = cfg.getBoolean("only-include-defined-items", true);
         double temp = cfg.getDouble("final-score-cap", Double.MIN_VALUE);
         opts.finalScoreCap = temp > Double.MIN_VALUE ? (float) temp : null;
 
@@ -61,12 +62,13 @@ public class ConfigLoader {
             Object test = cs.get(enchantmentName);
             final EnchantmentInfo ei = new EnchantmentInfo();
             double levelScale = cs.getDouble("enchantment-level-scale", Double.MIN_VALUE);
-            double value = Double.MIN_VALUE;
-            //Utils.logger.info(String.format("%s: %s", enchantmentName, test));
+            double value;
+
             if (test instanceof MemorySection){
                 MemorySection ms = (MemorySection) test;
                 levelScale = ms.getDouble("scale", levelScale);
                 Object valueSectionObj = ((MemorySection) test).get("value");
+                value = ms.getDouble("value", Double.MIN_VALUE);
 
                 if (valueSectionObj instanceof MemorySection){
                     final MemorySection valueSection = (MemorySection) valueSectionObj;
@@ -106,9 +108,6 @@ public class ConfigLoader {
             }
 
             ei.value = (float) value;
-            if (!ei.levelAssignments.isEmpty()){
-                Utils.logger.info(enchantmentName + ", level assignments: " + ei.levelAssignments);
-            }
 
             if (levelScale > Double.MIN_VALUE)
                 ei.levelScale = (float) levelScale;

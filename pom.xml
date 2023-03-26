@@ -6,7 +6,7 @@
 
     <groupId>io.github.stumper66</groupId>
     <artifactId>ArmorPlaceholders</artifactId>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <packaging>jar</packaging>
 
     <name>ArmorPlaceholders</name>

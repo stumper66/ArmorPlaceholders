@@ -80,12 +80,12 @@ public class Commands implements CommandExecutor, TabCompleter {
     private void showInfo(){
         if (!hasPermissions("info")) return;
 
-        final String msg = "&9&lArmorPlaceholder " + main.getDescription().getVersion() + "\n" +
+        final String msg = "&9&lArmorPlaceholder " + main.getDescription().getVersion() + "&r\n" +
                 "&l-----------------------------\n" +
                 "Plugin created by &9&oStumper66\n" +
                 "&7Contributors: &9&oUltimaOath";
 
-        sender.sendMessage(msg);
+        sender.sendMessage(Utils.colorizeStandardCodes(msg));
     }
 
     @Override
