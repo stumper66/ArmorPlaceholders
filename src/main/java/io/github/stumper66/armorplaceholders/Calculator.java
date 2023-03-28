@@ -9,6 +9,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +30,7 @@ public class Calculator {
 
     public CalculateResult calculatePlayerNumber(final @NotNull Player player, final boolean showInfo){
         this.showInfo = showInfo;
-        float score = 0f;
+        float score = 0.0f;
         this.itemCount = 0;
         this.calculateInfo.setLength(0);
         final String separators = "&l------------------------------&r";
@@ -92,6 +93,8 @@ public class Calculator {
 
     private float checkItem(final @Nullable ItemStack item, final String description){
         if (item == null || item.getType() == Material.AIR) return 0f;
+
+        if (miscOptions.onlyIncludeDefinedItems && !this.itemsMap.containsKey(item.getType())) return 0.0f;
         final ItemInfo itemInfo = itemsMap.get(item.getType());
 
         float itemScore = miscOptions.itemDefaultValue;
@@ -115,9 +118,7 @@ public class Calculator {
         if (this.enchantmentsMap == null) this.enchantmentsMap = new HashMap<>();
         StringBuilder sbEnchantments = new StringBuilder();
         float enchantmentScore = 0.0f;
-        boolean hasEnchantments = false;
         for (final Enchantment enchantment : meta.getEnchants().keySet()){
-            hasEnchantments = true;
             final int enchantmentLevel = meta.getEnchants().get(enchantment);
             float levelScale = miscOptions.enchantmentLevelScale;
             float value;
@@ -134,8 +135,8 @@ public class Calculator {
             float totalValue = value * ((float) enchantmentLevel * levelScale);
             if (showInfo) {
                 final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
-                sbEnchantments.append(String.format("\n  - &7&o%s %s&r (&9+%s&r)",
-                        enchantName, enchantmentLevel, totalValue));
+                sbEnchantments.append(String.format("\n  - &7&o%s %s&r (%s&r)",
+                        enchantName, enchantmentLevel, formatPlusAndMinus(totalValue)));
             }
             enchantmentScore += totalValue;
         }
@@ -153,12 +154,9 @@ public class Calculator {
 
         if (showInfo) {
             calculateInfo.append("\n");
-            String extra = hasEnchantments ?
-                    String.format(" + &3%s&r", itemScore - noEnchantmentScore) :
-                    "";
             final String friendlyName = Utils.capitalize(item.getType().toString().replace("_", " "));
-            calculateInfo.append(String.format("[%s] %s: &7&o%s&r (&9%s&r%s)",
-                    itemCount, description, friendlyName, noEnchantmentScore, extra));
+            calculateInfo.append(String.format("[%s] %s: &7&o%s&r (%s&r)",
+                    itemCount, description, friendlyName, formatPlusAndMinus(noEnchantmentScore)));
             if (sbEnchantments.length() > 0)
                 calculateInfo.append(sbEnchantments);
 
@@ -169,5 +167,20 @@ public class Calculator {
         }
 
         return itemScore;
+    }
+
+    @Contract(pure = true)
+    private @NotNull String formatPlusAndMinus(final Float value){
+        // &c = red
+        // &9 = blue
+        if (value > 0.0f){
+            return "+&9" + value;
+        }
+        else if (value == 0.0f){
+            return "&9" + value;
+        }
+        else{
+            return "&c-" + value;
+        }
     }
 }

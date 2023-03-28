@@ -151,11 +151,12 @@ public class ConfigLoader {
             double value = cs.getDouble(materialName, Double.MIN_VALUE);
             if (value == Double.MIN_VALUE) continue;
 
-            Material material;
+            Material material = null;
             try{
                 material = Material.getMaterial(materialName);
             }
-            catch (Exception e){
+            catch (Exception ignored){ }
+            if (material == null){
                 Utils.logger.warning("Invalid material: " + materialName);
                 continue;
             }

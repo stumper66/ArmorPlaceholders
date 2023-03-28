@@ -1,8 +1,8 @@
 #    _____                   _____ _             _       _   _
-#   |  _  |___ _____ ___ ___|  _  | |___ ___ ___| |_ ___| |_| |___ ___
-#   |     |  _|     | . |  _|   __| | .'|  _| -_|   | . | | . | -_|  _|
-#   |__|__|_| |_|_|_|___|_| |__|  |_|__,|___|___|_|_|___|_|___|___|_|
-#                                                 Created by stumper66
+#   |  _  |___ _____ ___ ___|  _  | |___ ___ ___| |_ ___| |_| |___ ___ ___
+#   |     |  _|     | . |  _|   __| | .'|  _| -_|   | . | | . | -_|  _|_ -|
+#   |__|__|_| |_|_|_|___|_| |__|  |_|__,|___|___|_|_|___|_|___|___|_| |___|
+#                                                      Created by stumper66
 
 # ------------- Default Settings -------------
 
@@ -197,10 +197,10 @@ materials:
   IRON_LEGGINGS: 6.0
   IRON_BOOTS: 3.0
 
-  GOLD_HELMET: 2.0
-  GOLD_CHESTPLATE: 4.0
-  GOLD_LEGGINGS: 3.0
-  GOLD_BOOTS: 1.0
+  GOLDEN_HELMET: 2.0
+  GOLDEN_CHESTPLATE: 4.0
+  GOLDEN_LEGGINGS: 3.0
+  GOLDEN_BOOTS: 1.0
 
   DIAMOND_HELMET: 6.0
   DIAMOND_CHESTPLATE: 10.0
@@ -214,15 +214,17 @@ materials:
 
   # ------------- Weapons -------------
 
+  WOODEN_SWORD: 2.0
   STONE_SWORD: 3.0
   IRON_SWORD: 7.0
-  GOLD_SWORD: 3.0
+  GOLDEN_SWORD: 3.0
   DIAMOND_SWORD: 12.0
   NETHERITE_SWORD: 17.0
 
+  WOODEN_AXE: 1.0
   STONE_AXE: 2.0
   IRON_AXE: 6.0
-  GOLD_AXE: 2.0
+  GOLDEN_AXE: 2.0
   DIAMOND_AXE: 11.0
   NETHERITE_AXE: 16.0
 
