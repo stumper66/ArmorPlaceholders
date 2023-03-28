@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,10 +67,11 @@ public class Calculator {
             }
         }
 
+        score = (float) Utils.roundToTwo(score);
+
         if (showInfo){
             if (itemCount > 0) {
-                if (calculateInfo.length() > 0)
-                    calculateInfo.append("\n");
+                calculateInfo.append("\n");
                 calculateInfo.append(separators);
                 calculateInfo.append(String.format("\nTotal result: &9%s&r", score));
                 if (sbMisc.length() > 0)
@@ -93,25 +95,22 @@ public class Calculator {
         final ItemInfo itemInfo = itemsMap.get(item.getType());
 
         float itemScore = miscOptions.itemDefaultValue;
-        if (itemInfo == null) {
-            if (miscOptions.onlyIncludeDefinedItems){
-                return 0.0f;
-            }
-            this.itemCount++;
-            if (calculateInfo.length() > 0)
-                calculateInfo.append("\n");
-            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r)",
-                    itemCount, description, item.getType(), itemScore));
-
-            return itemScore;
-        }
 
         this.itemCount++;
-        itemScore += itemInfo.value;
-        final float noEnchantmentScore = itemScore;
+        if (itemInfo != null) itemScore += itemInfo.value;
+        float noEnchantmentScore = itemScore;
 
         final ItemMeta meta = item.getItemMeta();
         if (meta == null) return itemScore;
+
+        double percentDamaged = 0.0;
+        if (miscOptions.useItemDamageScale && meta instanceof Damageable){
+            final Damageable dam = (Damageable) meta;
+            if (dam.hasDamage()) {
+                percentDamaged = ((double) dam.getDamage() / (double) item.getType().getMaxDurability() * 100.0);
+                percentDamaged = Utils.roundToTwo(percentDamaged);
+            }
+        }
 
         if (this.enchantmentsMap == null) this.enchantmentsMap = new HashMap<>();
         StringBuilder sbEnchantments = new StringBuilder();
@@ -128,32 +127,45 @@ public class Calculator {
                 if (ei.levelScale != null) levelScale = ei.levelScale;
                 if (ei.levelAssignments.containsKey(enchantmentLevel))
                     value = ei.levelAssignments.get(enchantmentLevel).floatValue();
-
             }
             else
                 value = miscOptions.enchantmentDefaultValue;
 
-            float totalValue = value * (float) enchantmentLevel * levelScale;
+            float totalValue = value * ((float) enchantmentLevel * levelScale);
             if (showInfo) {
                 final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
-                sbEnchantments.append(String.format("\n  - &7&o%s_%s&r (&9%s&r)",
+                sbEnchantments.append(String.format("\n  - &7&o%s %s&r (&9+%s&r)",
                         enchantName, enchantmentLevel, totalValue));
             }
             enchantmentScore += totalValue;
         }
 
+        double damageDiff = 0.0;
+        if (percentDamaged > 0.0){
+            final float preScore = miscOptions.applyDamageScaleToEnchantments ?
+                    itemScore + enchantmentScore : itemScore;
+            damageDiff = Utils.roundToTwo(preScore * percentDamaged * 0.01);
+            itemScore -= (float) damageDiff;
+        }
+
         itemScore += enchantmentScore;
+        if (itemScore < 0.0f) itemScore = 0.0f;
 
         if (showInfo) {
-            if (calculateInfo.length() > 0)
-                calculateInfo.append("\n");
+            calculateInfo.append("\n");
             String extra = hasEnchantments ?
-                    " + &3" + itemScore + "&r" :
+                    String.format(" + &3%s&r", itemScore - noEnchantmentScore) :
                     "";
-            calculateInfo.append(String.format("[%s] %s: &7&o%s&r, (&9%s&r%s)",
-                    itemCount, description, item.getType(), noEnchantmentScore, extra));
+            final String friendlyName = Utils.capitalize(item.getType().toString().replace("_", " "));
+            calculateInfo.append(String.format("[%s] %s: &7&o%s&r (&9%s&r%s)",
+                    itemCount, description, friendlyName, noEnchantmentScore, extra));
             if (sbEnchantments.length() > 0)
                 calculateInfo.append(sbEnchantments);
+
+            if (percentDamaged > 0.0) {
+                calculateInfo.append("\n");
+                calculateInfo.append(String.format("  - &7&oDamage&r (&c-%s&r)", damageDiff));
+            }
         }
 
         return itemScore;

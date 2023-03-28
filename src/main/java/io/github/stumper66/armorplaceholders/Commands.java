@@ -66,7 +66,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         if (args.length >= 2){
             player = Bukkit.getPlayer(args[1]);
             if (player == null){
-                sender.sendMessage("Invalid player name " + args[1]);
+                sender.sendMessage("The selected player either doesn't exist or is offline.");
                 return;
             }
         }

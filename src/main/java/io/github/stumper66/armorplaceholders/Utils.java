@@ -16,6 +16,10 @@ public class Utils {
                 net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', msg);
     }
 
+    public static double roundToTwo(final double amount){
+        return Math.round(amount * 100.0) / 100.0;
+    }
+
     public static @NotNull String capitalize(@NotNull final String str) {
         final StringBuilder builder = new StringBuilder();
         final String[] words = str.toLowerCase().split(" "); // each word separated from str

@@ -37,10 +37,12 @@ public class ConfigLoader {
         opts.finalScale = (float) cfg.getDouble("final-scale", 1.0);
         opts.enchantmentDefaultValue = (float) cfg.getDouble("enchantment-default-value", 1.0);
         opts.enchantmentLevelScale = (float) cfg.getDouble("enchantment-level-scale", 1.0);
+        opts.useItemDamageScale = cfg.getBoolean("use-item-damage-scale", true);
         opts.checkMainHand = cfg.getBoolean("check-main-hand", true);
         opts.checkOffHand = cfg.getBoolean("check-offhand-hand", true);
         opts.checkArmor = cfg.getBoolean("check-armor", true);
         opts.onlyIncludeDefinedItems = cfg.getBoolean("only-include-defined-items", true);
+        opts.applyDamageScaleToEnchantments = cfg.getBoolean("apply-damage-scale-to-enchantments", true);
         double temp = cfg.getDouble("final-score-cap", Double.MIN_VALUE);
         opts.finalScoreCap = temp > Double.MIN_VALUE ? (float) temp : null;
 
@@ -59,15 +61,15 @@ public class ConfigLoader {
         if (cs == null) return enchantmentsMap;
 
         for (final String enchantmentName : cs.getKeys(false)){
-            Object test = cs.get(enchantmentName);
+            Object keys = cs.get(enchantmentName);
             final EnchantmentInfo ei = new EnchantmentInfo();
             double levelScale = cs.getDouble("enchantment-level-scale", Double.MIN_VALUE);
             double value;
 
-            if (test instanceof MemorySection){
-                MemorySection ms = (MemorySection) test;
+            if (keys instanceof MemorySection){
+                MemorySection ms = (MemorySection) keys;
                 levelScale = ms.getDouble("scale", levelScale);
-                Object valueSectionObj = ((MemorySection) test).get("value");
+                final Object valueSectionObj = ((MemorySection) keys).get("value");
                 value = ms.getDouble("value", Double.MIN_VALUE);
 
                 if (valueSectionObj instanceof MemorySection){
@@ -92,6 +94,28 @@ public class ConfigLoader {
                         }
                         catch (Exception ignored){
                             Utils.logger.info(String.format("Invalid level assignment for %s:%s", enchantmentName, key));
+                        }
+                    }
+                }
+                else{
+                    for (final String enchantLevelStr : ms.getKeys(false)){
+                        if ("value".equalsIgnoreCase(enchantLevelStr)){
+                            value = ms.getDouble(enchantLevelStr);
+                        }
+                        else if("scale".equalsIgnoreCase(enchantLevelStr)){
+                            levelScale = ms.getDouble(enchantLevelStr);
+                        }
+                        else if (enchantLevelStr.length() < 4){
+                            int enchantLevel;
+                            try{
+                                enchantLevel = Integer.parseInt(enchantLevelStr);
+                            }
+                            catch (Exception ignored){
+                                continue;
+                            }
+                            double tempD = ms.getDouble(enchantLevelStr, Double.MIN_VALUE);
+                            if (tempD > Double.MIN_VALUE)
+                                ei.levelAssignments.put(enchantLevel, tempD);
                         }
                     }
                 }
