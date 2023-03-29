@@ -51,32 +51,38 @@ public class Calculator {
             score += checkItem(ee.getItemInOffHand(), "Off-Hand");
         }
 
-        StringBuilder sbMisc = new StringBuilder();
-        if (miscOptions.finalScoreCap != null && score > miscOptions.finalScoreCap){
-            score = miscOptions.finalScoreCap;
-            if (showInfo) {
-                sbMisc.append(String.format(", hit-cap: &9%s&r",
-                        miscOptions.finalScoreCap));
-            }
-        }
+        String misc = null;
 
         if (miscOptions.finalScale != 1.0f){
+            final float preScore = score;
             score *= miscOptions.finalScale;
             if (showInfo){
-                sbMisc.append(String.format(", scl: &9%s&r",
-                        miscOptions.finalScale));
+                final float difference = (float) Utils.roundToTwo(score - preScore);
+                misc = String.format("\n  - Scaled %s&r (%s&r)",
+                        formatPlusAndMinus(miscOptions.finalScale), formatPlusAndMinus(difference, "&b"));
             }
         }
 
         score = (float) Utils.roundToTwo(score);
+
+        if (miscOptions.finalScoreCap != null && score > miscOptions.finalScoreCap){
+            score = miscOptions.finalScoreCap;
+            if (showInfo) {
+                final String temp = " (reached cap)";
+                if (misc == null)
+                    misc = temp;
+                else
+                    misc = temp + misc;
+            }
+        }
 
         if (showInfo){
             if (itemCount > 0) {
                 calculateInfo.append("\n");
                 calculateInfo.append(separators);
                 calculateInfo.append(String.format("\nTotal result: &9%s&r", score));
-                if (sbMisc.length() > 0)
-                    calculateInfo.append(sbMisc);
+                if (misc != null)
+                    calculateInfo.append(misc);
 
                 final String finalMsg = Utils.colorizeStandardCodes(calculateInfo.toString());
                 calculateInfo.setLength(0);
@@ -97,10 +103,14 @@ public class Calculator {
         if (miscOptions.onlyIncludeDefinedItems && !this.itemsMap.containsKey(item.getType())) return 0.0f;
         final ItemInfo itemInfo = itemsMap.get(item.getType());
 
-        float itemScore = miscOptions.itemDefaultValue;
+        float itemScore = 0.0f;
 
         this.itemCount++;
-        if (itemInfo != null) itemScore += itemInfo.value;
+        if (itemInfo != null)
+            itemScore += itemInfo.value;
+        else
+            itemScore = miscOptions.itemDefaultValue;
+
         float noEnchantmentScore = itemScore;
 
         final ItemMeta meta = item.getItemMeta();
@@ -136,7 +146,7 @@ public class Calculator {
             if (showInfo) {
                 final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
                 sbEnchantments.append(String.format("\n  - &7&o%s %s&r (%s&r)",
-                        enchantName, enchantmentLevel, formatPlusAndMinus(totalValue)));
+                        enchantName, enchantmentLevel, formatPlusAndMinus(totalValue, "&b")));
             }
             enchantmentScore += totalValue;
         }
@@ -171,16 +181,21 @@ public class Calculator {
 
     @Contract(pure = true)
     private @NotNull String formatPlusAndMinus(final Float value){
+        return formatPlusAndMinus(value, "&9");
+    }
+
+    @Contract(pure = true)
+    private @NotNull String formatPlusAndMinus(final Float value, final @NotNull String colorCode){
         // &c = red
         // &9 = blue
         if (value > 0.0f){
-            return "+&9" + value;
+            return colorCode + "+" + value;
         }
         else if (value == 0.0f){
-            return "&9" + value;
+            return colorCode + value;
         }
         else{
-            return "&c-" + value;
+            return "&c" + value;
         }
     }
 }
