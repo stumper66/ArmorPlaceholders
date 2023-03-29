@@ -132,17 +132,22 @@ public class Calculator {
             final int enchantmentLevel = meta.getEnchants().get(enchantment);
             float levelScale = miscOptions.enchantmentLevelScale;
             float value;
+            boolean hadLevelAssignment = false;
             EnchantmentInfo ei = this.enchantmentsMap.get(enchantment);
             if (ei != null){
                 value = ei.value;
                 if (ei.levelScale != null) levelScale = ei.levelScale;
-                if (ei.levelAssignments.containsKey(enchantmentLevel))
+                if (ei.levelAssignments.containsKey(enchantmentLevel)) {
                     value = ei.levelAssignments.get(enchantmentLevel).floatValue();
+                    hadLevelAssignment = true;
+                }
             }
             else
                 value = miscOptions.enchantmentDefaultValue;
 
-            float totalValue = value * ((float) enchantmentLevel * levelScale);
+            float totalValue = hadLevelAssignment ?
+                    value : value * ((float) enchantmentLevel * levelScale);
+
             if (showInfo) {
                 final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
                 sbEnchantments.append(String.format("\n  - &7&o%s %s&r (%s&r)",
