@@ -3,6 +3,8 @@ package io.github.stumper66.armorplaceholders;
 import io.github.stumper66.armorplaceholders.definitions.EnchantmentInfo;
 import io.github.stumper66.armorplaceholders.definitions.ItemInfo;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -51,6 +53,10 @@ public class Calculator {
             score += checkItem(ee.getItemInOffHand(), "Off-Hand");
         }
 
+        if (miscOptions.checkAttributes){
+            score += checkAttributes(player);
+        }
+
         String misc = null;
 
         if (miscOptions.finalScale != 1.0f){
@@ -95,6 +101,46 @@ public class Calculator {
         }
 
         return new CalculateResult(score, calculateInfo.toString());
+    }
+
+    private float checkAttributes(final @NotNull Player player){
+        StringBuilder sb = new StringBuilder();
+        float result = 0.0f;
+
+        for (final Attribute attribute : Attribute.values()) {
+            if (!miscOptions.attributes.containsKey(attribute)) continue;
+
+            final float multiplier = miscOptions.attributes.get(attribute);
+            final AttributeInstance attInst = player.getAttribute(attribute);
+
+            if (attInst == null) {
+                continue;
+            }
+
+            final float value = (float) attInst.getValue();
+            final float thisResult = value * multiplier;
+            result += thisResult;
+
+            if (showInfo) {
+                if (sb.length() > 0) sb.append("\n");
+
+                sb.append(String.format("  - &7&o%s&r (&c%s&r)",
+                        attribute.name(), formatPlusAndMinus(thisResult)));
+            }
+        }
+
+        if (sb.length() > 0){
+            this.itemCount++;
+
+            if (showInfo) {
+                calculateInfo.append("\n");
+                calculateInfo.append(String.format("[%s] Attributes (%s&r)\n",
+                        itemCount, formatPlusAndMinus(result)));
+                calculateInfo.append(sb);
+            }
+        }
+
+        return result;
     }
 
     private float checkItem(final @Nullable ItemStack item, final String description){
@@ -149,7 +195,7 @@ public class Calculator {
                     value : value * ((float) enchantmentLevel * levelScale);
 
             if (showInfo) {
-                final String enchantName = Utils.capitalize(enchantment.key().value().replace("_", " "));
+                final String enchantName = Utils.capitalize(enchantment.getKey().value().replace("_", " "));
                 sbEnchantments.append(String.format("\n  - &7&o%s %s&r (%s&r)",
                         enchantName, enchantmentLevel, formatPlusAndMinus(totalValue, "&b")));
             }

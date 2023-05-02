@@ -7,6 +7,6 @@ public class ItemInfo {
     public float value;
 
     public String toString(){
-        return "" + value;
+        return String.valueOf(value);
     }
 }

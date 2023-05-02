@@ -9,6 +9,7 @@
 check-main-hand: true
 check-offhand-hand: true
 check-armor: true
+check-attributes: false
 only-include-defined-items: true
 apply-damage-scale-to-enchantments: true
 
@@ -235,3 +236,15 @@ materials:
   # ------------- Miscellaneous -------------
 
   SHIELD: 5.0
+
+  # ------------- Attributes -------------
+
+attributes:
+  GENERIC_MAX_HEALTH: 1.0
+  GENERIC_KNOCKBACK_RESISTANCE: 1.0
+  GENERIC_MOVEMENT_SPEED: 20.0
+  GENERIC_ATTACK_DAMAGE: 4.0
+  GENERIC_ATTACK_SPEED: 1.0
+  GENERIC_ARMOR: 3.0
+  GENERIC_ARMOR_TOUGHNESS: 1.0
+  GENERIC_LUCK: 1.0

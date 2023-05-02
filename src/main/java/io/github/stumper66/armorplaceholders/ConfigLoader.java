@@ -4,6 +4,7 @@ import io.github.stumper66.armorplaceholders.definitions.EnchantmentInfo;
 import io.github.stumper66.armorplaceholders.definitions.ItemInfo;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.MemorySection;
@@ -15,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigLoader {
@@ -41,10 +44,13 @@ public class ConfigLoader {
         opts.checkMainHand = cfg.getBoolean("check-main-hand", true);
         opts.checkOffHand = cfg.getBoolean("check-offhand-hand", true);
         opts.checkArmor = cfg.getBoolean("check-armor", true);
+        opts.checkAttributes = cfg.getBoolean("check-attributes", false);
         opts.onlyIncludeDefinedItems = cfg.getBoolean("only-include-defined-items", true);
         opts.applyDamageScaleToEnchantments = cfg.getBoolean("apply-damage-scale-to-enchantments", true);
         double temp = cfg.getDouble("final-score-cap", Double.MIN_VALUE);
         opts.finalScoreCap = temp > Double.MIN_VALUE ? (float) temp : null;
+        opts.attributes.clear();
+        opts.attributes.putAll(parseAttributes(cfg));
 
         final Map<Enchantment, EnchantmentInfo> enchantmentsMap = parseEnchantments(cfg);
         final Map<Material, ItemInfo> itemsMap = parseMaterials(cfg);
@@ -53,6 +59,30 @@ public class ConfigLoader {
         main.calculator.miscOptions = opts;
         main.calculator.itemsMap = itemsMap;
         main.calculator.enchantmentsMap = enchantmentsMap;
+    }
+
+    private static @NotNull Map<Attribute, Float> parseAttributes(final @NotNull YamlConfiguration cfg){
+        final Map<Attribute, Float> result = new Hashtable<>();
+
+        final List<Attribute> attribs = List.of(
+                Attribute.GENERIC_ATTACK_DAMAGE,
+                Attribute.GENERIC_ATTACK_SPEED,
+                Attribute.GENERIC_ARMOR,
+                Attribute.GENERIC_ARMOR_TOUGHNESS,
+                Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+                Attribute.GENERIC_LUCK,
+                Attribute.GENERIC_MAX_HEALTH,
+                Attribute.GENERIC_MOVEMENT_SPEED
+                );
+
+        for (final Attribute attrib : attribs){
+            final double value = cfg.getDouble("attributes." + attrib.name(), Double.MIN_VALUE);
+            if (value == Double.MIN_VALUE) continue;
+
+            result.put(attrib, (float)value);
+        }
+
+        return result;
     }
 
     private static @NotNull Map<Enchantment, EnchantmentInfo> parseEnchantments(final @NotNull YamlConfiguration cfg){

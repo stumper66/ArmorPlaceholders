@@ -16,6 +16,6 @@ public class EnchantmentInfo {
     public final Map<Integer, Double> levelAssignments;
 
     public String toString(){
-        return "" + value;
+        return String.valueOf(value);
     }
 }

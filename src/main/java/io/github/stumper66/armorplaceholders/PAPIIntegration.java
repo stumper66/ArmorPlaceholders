@@ -42,7 +42,7 @@ public class PAPIIntegration extends PlaceholderExpansion {
         }
 
         if ("calculate".equalsIgnoreCase(identifier) || "calc".equalsIgnoreCase(identifier)) {
-            return Utils.roundToTwo(main.calculator.calculatePlayerNumber(player, false).result) + "";
+            return String.valueOf(Utils.roundToTwo(main.calculator.calculatePlayerNumber(player, false).result));
         }
 
         return null;
